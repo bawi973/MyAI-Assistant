@@ -1,2 +1,5 @@
 flet
+onnxruntime
+tokenizers
 requests
+numpy
