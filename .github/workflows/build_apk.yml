@@ -1,0 +1,43 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch: # يسمح بتشغيل البناء بضغطة زر يدوياً
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+        # تثبيت أداة البناء الخاصة بـ Flet
+        pip install flet
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Build APK
+      # هذا الأمر السحري الذي يحول بايثون إلى أندرويد
+      run: |
+        flet build apk --verbose
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: AI-Assistant-App
+        path: build/apk/*.apk
